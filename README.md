@@ -35,17 +35,10 @@
 
 本项目的所有功能都是基于HivisionIDPhotos Pro进行对接开发，您部署HivisionIDPhotos Pro后即可完成私有化部署API
 
-视频部署教程：待添加
+1.视频部署教程：待添加
 
+2.如果您不想部署，可以直接使用映象引擎云平台：https://cloud.0po.cn/
 
-
-
-
-如果您不想部署，可以直接使用映象引擎云平台
-
-映象引擎：https://cloud.0po.cn/
-
-<p align="center"><img src="./assets/6.png"></p>
 
 <hr>
 <br>
