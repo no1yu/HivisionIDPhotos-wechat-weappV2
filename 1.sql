@@ -1091,9 +1091,9 @@ CREATE TABLE `web_set` (
   `sharpen_strength` int DEFAULT NULL COMMENT '美颜锐化调整强度，最大50',
   `saturation_strength` int DEFAULT NULL COMMENT '美颜饱和度调整强度，最大5',
   `pic_api_type` tinyint NOT NULL DEFAULT '1' COMMENT 'API处理方式：1自建，2云平台',
+  `pic_api_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '图片API地址',
   `pic_api_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '云平台API密钥',
   `human_matting_model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'ppMattingV2' COMMENT '证件照人像分割模型',
-  `pic_api_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '图片API地址',
   `face_detect_model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'yunet' COMMENT '人脸检测模型',
   `matting_model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'silueta' COMMENT '智能抠图模型',
   `colourize_model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'ddcolor' COMMENT '黑白照片上色模型',
@@ -1113,8 +1113,8 @@ CREATE TABLE `web_set` (
 -- 转存表中的数据 `web_set`
 --
 
-INSERT INTO `web_set` (`id`, `app_id`, `app_secret`, `video_unit_id`, `login_type`, `pic_domain`, `directory`, `official_switch`, `official_qr_code_image_url`, `merchant_id`, `merchant_serial_number`, `api_v3_key`, `merchant_private_key`, `pay_notify_url`, `brightness_strength`, `contrast_strength`, `sharpen_strength`, `saturation_strength`, `pic_api_type`, `pic_api_key`, `human_matting_model`, `pic_api_url`, `face_detect_model`, `matting_model`, `colourize_model`, `cartoon_model`, `american_human_matting_model`, `american_face_detect_model`, `template_human_matting_model`, `template_face_detect_model`, `couple_human_matting_model`, `couple_face_detect_model`, `clothes_face_detect_model`, `clothes_parsing_model`, `deblur_model`) VALUES
-(1, '', '', '', 1, '', '', 2, '', '', '', '', '', '', 1, 1, 1, 1, 1, '', 'ppMattingV2', '', 'yunet', 'silueta', 'ddcolor', 'cartoon', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'yunet', 'selfieMulticlass', 'realEsrgan');
+INSERT INTO `web_set` (`id`, `app_id`, `app_secret`, `video_unit_id`, `login_type`, `pic_domain`, `directory`, `official_switch`, `official_qr_code_image_url`, `merchant_id`, `merchant_serial_number`, `api_v3_key`, `merchant_private_key`, `pay_notify_url`, `brightness_strength`, `contrast_strength`, `sharpen_strength`, `saturation_strength`, `pic_api_type`, `pic_api_url`, `pic_api_key`, `human_matting_model`, `face_detect_model`, `matting_model`, `colourize_model`, `cartoon_model`, `american_human_matting_model`, `american_face_detect_model`, `template_human_matting_model`, `template_face_detect_model`, `couple_human_matting_model`, `couple_face_detect_model`, `clothes_face_detect_model`, `clothes_parsing_model`, `deblur_model`) VALUES
+(1, '', '', '', 1, '', '', 2, '', '', '', '', '', '', 1, 1, 1, 1, 1, '', '', 'ppMattingV2', 'yunet', 'silueta', 'ddcolor', 'cartoon', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'yunet', 'selfieMulticlass', 'realEsrgan');
 
 -- --------------------------------------------------------
 
