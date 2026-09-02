@@ -154,28 +154,28 @@ QQ群：151601935
 
 # 感谢
 
-首先，衷心感谢 [林博士](https://github.com/Zeyi-Lin) 开源 [HivisionIDPhotos](https://github.com/Zeyi-Lin/HivisionIDPhotos)，为本项目提供了优秀的技术基础，也让更多开发者能够参与证件照项目的学习、实践与创新
+感谢 [林博士](https://github.com/Zeyi-Lin) 开源 [HivisionIDPhotos](https://github.com/Zeyi-Lin/HivisionIDPhotos)，让这个项目有了很好的起点
 
-其次，也要特别感谢在 V1 版本中给予支持的每一位小伙伴。你们的认可、建议与鼓励，陪伴项目一步步走到今天，也是我持续完善项目并推出 V2 版本最大的动力。每一份支持我都铭记在心，谢谢你们！
+也谢谢所有在 V1 版本中，支持过我的小伙伴们，在我负债的时候是你们拉了我一把，也让我有了继续把项目做下去的动力
 
-<p align="center"><strong>感谢每一份支持与陪伴</strong></p>
+<p align="center"><strong>真的很感谢你们</strong></p>
 
 <p align="center">
-  <a href="./assets/support-2024-10.jpg"><img src="./assets/support-2024-10.jpg" alt="2024年10月支持记录" width="32%"></a>
-  <a href="./assets/support-2024-11.jpg"><img src="./assets/support-2024-11.jpg" alt="2024年11月支持记录" width="32%"></a>
-  <a href="./assets/support-2024-12.jpg"><img src="./assets/support-2024-12.jpg" alt="2024年12月支持记录" width="32%"></a>
+  <a href="./assets/support-2024-10.jpg"><img src="./assets/support-2024-10.jpg" width="32%"></a>
+  <a href="./assets/support-2024-11.jpg"><img src="./assets/support-2024-11.jpg" width="32%"></a>
+  <a href="./assets/support-2024-12.jpg"><img src="./assets/support-2024-12.jpg" width="32%"></a>
 </p>
 
 <p align="center">
-  <a href="./assets/support-2025-01.jpg"><img src="./assets/support-2025-01.jpg" alt="2025年1月支持记录" width="32%"></a>
-  <a href="./assets/support-2025-02.jpg"><img src="./assets/support-2025-02.jpg" alt="2025年2月支持记录" width="32%"></a>
-  <a href="./assets/support-2025-03.jpg"><img src="./assets/support-2025-03.jpg" alt="2025年3月支持记录" width="32%"></a>
+  <a href="./assets/support-2025-01.jpg"><img src="./assets/support-2025-01.jpg" width="32%"></a>
+  <a href="./assets/support-2025-02.jpg"><img src="./assets/support-2025-02.jpg" width="32%"></a>
+  <a href="./assets/support-2025-03.jpg"><img src="./assets/support-2025-03.jpg" width="32%"></a>
 </p>
 
 <p align="center">
-  <a href="./assets/support-2025-05.jpg"><img src="./assets/support-2025-05.jpg" alt="2025年5月支持记录" width="32%"></a>
-  <a href="./assets/support-2025-08.jpg"><img src="./assets/support-2025-08.jpg" alt="2025年8月支持记录" width="32%"></a>
-  <a href="./assets/support-2025-09-11.jpg"><img src="./assets/support-2025-09-11.jpg" alt="2025年9月至11月支持记录" width="32%"></a>
+  <a href="./assets/support-2025-05.jpg"><img src="./assets/support-2025-05.jpg" width="32%"></a>
+  <a href="./assets/support-2025-08.jpg"><img src="./assets/support-2025-08.jpg" width="32%"></a>
+  <a href="./assets/support-2025-09-11.jpg"><img src="./assets/support-2025-09-11.jpg" width="32%"></a>
 </p>
 
 
