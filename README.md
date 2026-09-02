@@ -42,6 +42,7 @@
 
 
 如果您不想部署，可以直接使用映象引擎云平台
+
 映象引擎：https://cloud.0po.cn/
 
 <p align="center"><img src="./assets/6.png"></p>
@@ -109,7 +110,7 @@
 
 2. 
 - Mysql导入1.sql
-- 打开web_set表，配置app_id，app_secret，
+- 打开web_set表，配置app_id，app_secret
 - 至此Mysql配置完毕
 
 3.
