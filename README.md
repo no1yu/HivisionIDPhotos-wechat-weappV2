@@ -14,7 +14,7 @@
 **相关项目**：
 
 - 小程序前端V2第一套：https://github.com/no1yu/photoOneV2
-- 小程序管理员网页后台V2：https://github.com/no1xuan/zjzAdminV2
+- 小程序管理员网页后台V2：https://github.com/no1yu/zjzAdminV2
 - HivisionIDPhotos：https://github.com/Zeyi-Lin/HivisionIDPhotos
 - HivisionIDPhotosPro：https://github.com/no1yu/HivisionIDPhotosPro
 
