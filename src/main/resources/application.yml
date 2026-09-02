@@ -1,0 +1,59 @@
+server:
+  port: 8010
+
+spring:
+  servlet:
+    multipart:
+      max-file-size: 15MB
+      max-request-size: 100MB
+  # redis配置
+  redis:
+    database: 2
+    host: 127.0.0.1
+    port: 6379
+    # Redis服务器连接密码
+    password: 123456
+    timeout: 10s
+    lettuce:
+      pool:
+        max-active: 10000
+        max-wait: -1ms
+        max-idle: 10
+        min-idle: 0
+
+  application:
+    name: HivisionIDPhotos-wechat-weappV2
+  # 数据库配置
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://127.0.0.1:3306/zjzwx?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&serverTimezone=Asia/Shanghai
+    username: zjzwx
+    password: "123456"
+
+mybatis-plus:
+  mapper-locations: classpath:mapper/*.xml
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+    auto-mapping-behavior: FULL
+  global-config:
+    banner: false
+
+
+
+
+
+
+sa-token:
+  token-name: token
+  timeout: -1
+  active-timeout: -1
+  is-concurrent: false
+  is-share: false
+  token-style: uuid
+  is-log: true
+  maxTryTimes: -1
+  isColorLog: true
+  isReadBody: false
+  isReadCookie: false
+  isWriteHeader: false
+  is-print: off

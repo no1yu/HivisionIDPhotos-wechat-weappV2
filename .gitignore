@@ -1,0 +1,10 @@
+# IntelliJ IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+out/
+
+# HBuilderX
+.hbuilderx/
+unpackage/
