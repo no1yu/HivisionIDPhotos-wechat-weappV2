@@ -10,6 +10,6 @@ public class App {
     public static void main(String[] args) {
         SpringApplication.run(App.class, args);
         System.out.println("--------------------------------------------------------");
-        System.out.println("启动成功");
+        System.out.println("欢迎使用证件照伴侣服务");
     }
 }
