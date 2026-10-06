@@ -57,7 +57,7 @@ public interface AdminService {
     Map<String,Object> getUserMap();
 
     //支付订单列表
-    IPage<PayOrder> getPayOrderPage(int pageNum,int pageSize,int userId,String orderNo,String orderWx,int appId,int status,String startTime,String endTime);
+    IPage<PayOrder> getPayOrderPage(int pageNum,int pageSize,int userId,String orderNo,String orderWx,int appId,int type,int status,String startTime,String endTime);
 
     //应用筛选下拉
     List<Map<String,Object>> getAppSetOptions();
@@ -69,7 +69,7 @@ public interface AdminService {
     String refundOrder(Integer id);
 
     //删除支付订单
-    void deletePayOrder(Integer id);
+    String deletePayOrder(Integer id);
 
     //读取系统设置
     WebSet getWebSet();

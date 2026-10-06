@@ -29,8 +29,8 @@ public class OrderController {
 
     //每次调用都创建新的待支付订单并返回小程序支付参数
     @PostMapping("/createOrder")
-    public R createOrder(@RequestParam("photoId") Integer photoId) {
-        OrderPayVo orderPayVo = payOrderService.createOrder(StpUtil.getLoginIdAsInt(),photoId);
+    public R createOrder(@RequestParam("photoId") Integer photoId,@RequestParam(value = "code",required = false) String code) {
+        OrderPayVo orderPayVo = payOrderService.createOrder(StpUtil.getLoginIdAsInt(),photoId,code);
 
         //创建订单失败时把具体原因返回给小程序
         if(orderPayVo.getMsg()!=null){
@@ -41,8 +41,7 @@ public class OrderController {
 
     //根据免费、广告、支付或已经解锁的状态发放无水印图片
     @PostMapping("/downloadPhoto")
-    public R downloadPhoto(@RequestParam("photoId") Integer photoId,
-                           @RequestParam("rewarded") int rewarded) {
+    public R downloadPhoto(@RequestParam("photoId") Integer photoId,@RequestParam("rewarded") int rewarded) {
         PicVo picVo = payOrderService.downloadPhoto(StpUtil.getLoginIdAsInt(),photoId,rewarded);
 
         //没有满足当前下载条件时把原因返回给小程序

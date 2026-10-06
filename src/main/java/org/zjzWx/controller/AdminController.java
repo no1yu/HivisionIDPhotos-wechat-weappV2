@@ -154,8 +154,8 @@ public class AdminController {
 
     //支付订单列表
     @PostMapping("/getPayOrderPage")
-    public R getPayOrderPage(int pageNum,int pageSize,int userId,String orderNo,String orderWx,int appId,int status,String startTime,String endTime){
-        return R.ok(adminService.getPayOrderPage(pageNum,pageSize,userId,orderNo,orderWx,appId,status,startTime,endTime));
+    public R getPayOrderPage(int pageNum,int pageSize,int userId,String orderNo,String orderWx,int appId,int type,int status,String startTime,String endTime){
+        return R.ok(adminService.getPayOrderPage(pageNum,pageSize,userId,orderNo,orderWx,appId,type,status,startTime,endTime));
     }
 
     //应用筛选下拉
@@ -170,20 +170,23 @@ public class AdminController {
         return R.ok(adminService.getPayOrderCount());
     }
 
-    //管理员发起微信全额退款
+    //管理员按照订单支付方式发起全额退款
     @PostMapping("/refundPayOrder")
     public R refundPayOrder(Integer id){
         String msg = adminService.refundOrder(id);
         if(msg!=null){
             return R.no(msg);
         }
-        return R.ok("退款成功");
+        return R.ok("退款申请已提交，请稍后刷新网页查看状态");
     }
 
     //删除支付订单
     @PostMapping("/deletePayOrder")
     public R deletePayOrder(Integer id){
-        adminService.deletePayOrder(id);
+        String msg = adminService.deletePayOrder(id);
+        if(msg!=null){
+            return R.no(msg);
+        }
         return R.ok("删除成功");
     }
 

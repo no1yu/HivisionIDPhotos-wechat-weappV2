@@ -18,20 +18,29 @@ public interface PayOrderService extends IService<PayOrder> {
     DownloadSetVo getDownloadSet(Integer appId);
 
     //管理员后台分页读取支付订单
-    IPage<PayOrder> getPayOrderPage(int pageNum,int pageSize,int userId,String orderNo,String orderWx,int appId,int status,String startTime,String endTime);
+    IPage<PayOrder> getPayOrderPage(int pageNum,int pageSize,int userId,String orderNo,String orderWx,int appId,int type,int status,String startTime,String endTime);
 
-    //发起微信支付
-    OrderPayVo createOrder(Integer userId,Integer photoId);
+    //按照当前支付方式创建订单
+    OrderPayVo createOrder(Integer userId,Integer photoId,String code);
 
     //解锁照片并返回无水印图片
     PicVo downloadPhoto(Integer userId,Integer photoId,int rewarded);
 
-    //发起微信退款
+    //按照订单支付方式发起全额退款
     String refundOrder(Integer id);
+
+    //删除没有处于退款中的订单
+    String deleteOrder(Integer id);
 
     //微信支付回调
     JSONObject wxNotify(HttpServletRequest request,HttpServletResponse response);
 
     //微信退款回调
     JSONObject wxRefundNotify(HttpServletRequest request,HttpServletResponse response);
+
+    //验证虚拟支付消息推送地址
+    String verifyVirtualNotify(String signature,String timestamp,String nonce,String echostr);
+
+    //处理虚拟支付消息通知
+    String virtualNotify(HttpServletRequest request,JSONObject body);
 }

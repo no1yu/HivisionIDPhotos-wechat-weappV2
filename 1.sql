@@ -7,9 +7,9 @@
 -- 服务器版本： 8.0.35
 -- PHP 版本： 8.2.33
 
-SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
 START TRANSACTION;
-SET time_zone = "+00:00";
+SET time_zone = '+00:00';
 
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
@@ -32,7 +32,7 @@ CREATE TABLE `app_set` (
   `name` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '名字',
   `description` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '功能说明',
   `image` varchar(500) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '探索中心封面地址',
-  `status` int DEFAULT NULL COMMENT '下载模式：0关闭，1免费下载，2看广告下载，3付费下载，4看广告或付费下载；ID为1时控制图片上传，ID为2时控制美颜，ID为14时控制图片鉴黄，ID为15时控制换装',
+  `status` int DEFAULT NULL COMMENT '下载模式：0关闭功能，1免费下载，2看广告下载，3付费下载，4看广告或付费下载；ID为1时控制图片上传，ID为2时控制美颜，ID为14时控制图片鉴黄，ID为15时控制换装，0关闭，1开启',
   `setting_value` double DEFAULT NULL COMMENT '鉴黄拦截阈值，仅ID为14时使用，范围0.01到1',
   `download_price` decimal(10,2) DEFAULT NULL COMMENT '下载金额，单位元，状态为3或4时使用',
   `sort` int DEFAULT NULL COMMENT '探索应用显示顺序，数值最小的为置顶应用'
@@ -981,7 +981,7 @@ INSERT INTO `item` (`id`, `cloud_item_id`, `name`, `width_px`, `height_px`, `wid
 --
 
 CREATE TABLE `pay_order` (
-  `id` int NOT NULL COMMENT '微信支付订单表',
+  `id` int NOT NULL COMMENT '支付订单表',
   `order_no` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '商户订单号',
   `order_wx` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信支付订单号',
   `user_id` int DEFAULT NULL COMMENT '下单用户ID',
@@ -989,13 +989,15 @@ CREATE TABLE `pay_order` (
   `photo_id` int DEFAULT NULL COMMENT '订单购买下载权的照片ID',
   `name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '订单名称',
   `money` decimal(10,2) DEFAULT NULL COMMENT '订单金额，单位元',
-  `status` int DEFAULT '1' COMMENT '订单状态：1待支付，2支付成功，3退款成功',
+  `type` int NOT NULL DEFAULT '1' COMMENT '支付方式：1微信支付，2虚拟支付',
+  `status` int DEFAULT '1' COMMENT '订单状态：1待支付，2支付成功，3退款中，4退款失败，5退款成功',
   `refund_no` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '商户退款单号',
   `refund_wx` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信退款单号',
+  `refund_msg` text COLLATE utf8mb4_general_ci COMMENT '退款失败原因',
   `create_time` datetime DEFAULT NULL COMMENT '订单创建时间',
   `pay_time` datetime DEFAULT NULL COMMENT '支付成功时间',
   `refund_time` datetime DEFAULT NULL COMMENT '退款成功时间'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 -- --------------------------------------------------------
 
@@ -1081,6 +1083,13 @@ CREATE TABLE `web_set` (
   `directory` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '图片存储站路径',
   `official_switch` tinyint NOT NULL DEFAULT '2' COMMENT '个人中心公众号横幅：1显示，2关闭',
   `official_qr_code_image_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '公众号二维码图片地址',
+  `pay_type` int NOT NULL DEFAULT '1' COMMENT '支付方式：1微信支付，2虚拟支付',
+  `virtual_offer_id` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '虚拟支付OfferID',
+  `virtual_pay_environment` int NOT NULL DEFAULT '1' COMMENT '虚拟支付环境：1现网环境，2沙箱环境',
+  `virtual_app_key` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '虚拟支付AppKey',
+  `virtual_notify_url` varchar(255) COLLATE utf8mb4_general_ci DEFAULT 'https://你的JAVA后端域名/pay/virtualNotify' COMMENT '虚拟支付消息推送地址',
+  `virtual_token` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '虚拟支付消息推送Token',
+  `virtual_encoding_aes_key` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '虚拟支付消息推送EncodingAESKey',
   `merchant_id` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信支付商户号',
   `merchant_serial_number` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信支付商户证书序列号',
   `api_v3_key` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '微信支付APIv3密钥',
@@ -1107,14 +1116,14 @@ CREATE TABLE `web_set` (
   `clothes_face_detect_model` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'yunet' COMMENT '换装人脸检测模型',
   `clothes_parsing_model` varchar(255) COLLATE utf8mb4_general_ci NOT NULL DEFAULT 'selfieMulticlass' COMMENT '换装人体解析模型',
   `deblur_model` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci DEFAULT 'realEsrgan' COMMENT '模糊图片变清晰模型'
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci ROW_FORMAT=DYNAMIC;
 
 --
 -- 转存表中的数据 `web_set`
 --
 
-INSERT INTO `web_set` (`id`, `app_id`, `app_secret`, `video_unit_id`, `login_type`, `pic_domain`, `directory`, `official_switch`, `official_qr_code_image_url`, `merchant_id`, `merchant_serial_number`, `api_v3_key`, `merchant_private_key`, `pay_notify_url`, `brightness_strength`, `contrast_strength`, `sharpen_strength`, `saturation_strength`, `pic_api_type`, `pic_api_url`, `pic_api_key`, `human_matting_model`, `face_detect_model`, `matting_model`, `colourize_model`, `cartoon_model`, `american_human_matting_model`, `american_face_detect_model`, `template_human_matting_model`, `template_face_detect_model`, `couple_human_matting_model`, `couple_face_detect_model`, `clothes_face_detect_model`, `clothes_parsing_model`, `deblur_model`) VALUES
-(1, '', '', '', 1, '', '', 2, '', '', '', '', '', '', 1, 1, 1, 1, 1, '', '', 'ppMattingV2', 'yunet', 'silueta', 'ddcolor', 'cartoon', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'yunet', 'selfieMulticlass', 'realEsrgan');
+INSERT INTO `web_set` (`id`, `app_id`, `app_secret`, `video_unit_id`, `login_type`, `pic_domain`, `directory`, `official_switch`, `official_qr_code_image_url`, `pay_type`, `virtual_offer_id`, `virtual_pay_environment`, `virtual_app_key`, `virtual_notify_url`, `virtual_token`, `virtual_encoding_aes_key`, `merchant_id`, `merchant_serial_number`, `api_v3_key`, `merchant_private_key`, `pay_notify_url`, `brightness_strength`, `contrast_strength`, `sharpen_strength`, `saturation_strength`, `pic_api_type`, `pic_api_url`, `pic_api_key`, `human_matting_model`, `face_detect_model`, `matting_model`, `colourize_model`, `cartoon_model`, `american_human_matting_model`, `american_face_detect_model`, `template_human_matting_model`, `template_face_detect_model`, `couple_human_matting_model`, `couple_face_detect_model`, `clothes_face_detect_model`, `clothes_parsing_model`, `deblur_model`) VALUES
+(1, '', '', '', 1, '', '', 2, '', 1, NULL, 1, NULL, 'https://你的JAVA后端域名/pay/virtualNotify', NULL, NULL, '', '', '', '', '', 1, 1, 1, 1, 1, '', '', 'ppMattingV2', 'yunet', 'silueta', 'ddcolor', 'cartoon', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'ppMattingV2', 'yunet', 'yunet', 'selfieMulticlass', 'realEsrgan');
 
 -- --------------------------------------------------------
 
@@ -1124,7 +1133,7 @@ INSERT INTO `web_set` (`id`, `app_id`, `app_secret`, `video_unit_id`, `login_typ
 
 CREATE TABLE `web_task` (
   `id` int NOT NULL COMMENT '定时任务执行日志表',
-  `type` int DEFAULT NULL COMMENT '类型：1未解锁照片清理，2临时编辑数据清理',
+  `type` int DEFAULT NULL COMMENT '类型：1过期照片清理，2临时编辑数据清理',
   `task_name` varchar(255) COLLATE utf8mb4_general_ci DEFAULT NULL COMMENT '定时任务名称',
   `delete_count` int DEFAULT NULL COMMENT '本次删除的数据数量',
   `status` int DEFAULT NULL COMMENT '执行状态：1成功，2失败',
@@ -1178,7 +1187,8 @@ ALTER TABLE `item`
 -- 表的索引 `pay_order`
 --
 ALTER TABLE `pay_order`
-  ADD PRIMARY KEY (`id`);
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_pay_order_order_no` (`order_no`);
 
 --
 -- 表的索引 `photo`
@@ -1255,7 +1265,7 @@ ALTER TABLE `item`
 -- 使用表AUTO_INCREMENT `pay_order`
 --
 ALTER TABLE `pay_order`
-  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT '微信支付订单表';
+  MODIFY `id` int NOT NULL AUTO_INCREMENT COMMENT '支付订单表';
 
 --
 -- 使用表AUTO_INCREMENT `photo`

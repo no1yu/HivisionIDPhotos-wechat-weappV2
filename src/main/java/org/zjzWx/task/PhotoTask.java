@@ -27,15 +27,15 @@ public class PhotoTask {
 
 
 
-    //每天02:00执行    删除创建时间超过7天并且从未解锁的数据和物理图片
-    @Scheduled(cron = "0 0 2 * * ?", zone = "Asia/Shanghai")
+    //每天03:00执行    删除上传时间超过7天的照片记录和图片
+    @Scheduled(cron = "0 0 3 * * ?", zone = "Asia/Shanghai")
     public void deleteExpirePhotoTask() {
         long startTime = System.currentTimeMillis();
         int deleteCount = 0;
 
         WebTask webTask = new WebTask();
         webTask.setType(1);
-        webTask.setTaskName("未解锁照片清理");
+        webTask.setTaskName("过期照片清理");
         webTask.setStartTime(new Date(startTime));
 
         try {
@@ -47,17 +47,12 @@ public class PhotoTask {
             Calendar calendar = Calendar.getInstance(TimeZone.getTimeZone("Asia/Shanghai"));
             calendar.add(Calendar.DAY_OF_MONTH, -7);
             Date expireTime = calendar.getTime();
-            Date cleanupTime = new Date();
             int batchSize = 500;
 
             while (true) {
                 QueryWrapper<Photo> qw = new QueryWrapper<>();
                 qw.select("id","n_img");
                 qw.lt("create_time",expireTime);
-
-                //只扫描超过七天并且从未通过免费、广告或支付解锁的照片
-                qw.eq("download_status",1);
-                qw.and(wrapper -> wrapper.isNull("expire_time").or().le("expire_time",cleanupTime));
                 qw.orderByAsc("id");
                 qw.last("limit " + batchSize);
                 List<Photo> list = photoService.list(qw);
@@ -66,17 +61,15 @@ public class PhotoTask {
                 }
 
                 for (Photo photo : list) {
-                    //真正删除时再次限制解锁状态，避免扫描后刚完成支付的照片被误删
+                    //删除前再次确认上传时间已经超过7天
                     QueryWrapper<Photo> removeQw = new QueryWrapper<>();
                     removeQw.eq("id",photo.getId());
                     removeQw.lt("create_time",expireTime);
-                    removeQw.eq("download_status",1);
-                    removeQw.and(wrapper -> wrapper.isNull("expire_time").or().le("expire_time",cleanupTime));
                     if(photoService.remove(removeQw)){
                         deleteCount++;
                         PicUtil.deleteImage(photo.getNImg(),directory);
 
-                        //因为服务器会停机更新，导致定时器中断造成2小时没清理，所以需要再次清理一下，防止垃圾数据存留
+                        //同时删除这张照片的临时目录
                         PicUtil.deleteTempDirectory(photo.getId(),directory);
                     }
                 }

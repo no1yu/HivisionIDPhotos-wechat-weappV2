@@ -60,6 +60,41 @@ public class WebSet {
 
 
     /**
+     * 支付方式：1微信支付，2虚拟支付
+     */
+    private Integer payType;
+
+    /**
+     * 虚拟支付OfferID
+     */
+    private String virtualOfferId;
+
+    /**
+     * 虚拟支付环境：1现网环境，2沙箱环境
+     */
+    private Integer virtualPayEnvironment;
+
+    /**
+     * 虚拟支付AppKey
+     */
+    private String virtualAppKey;
+
+    /**
+     * 虚拟支付消息推送地址
+     */
+    private String virtualNotifyUrl;
+
+    /**
+     * 虚拟支付消息推送Token
+     */
+    private String virtualToken;
+
+    /**
+     * 虚拟支付消息推送EncodingAESKey
+     */
+    private String virtualEncodingAesKey;
+
+    /**
      * 微信支付商户号
      */
     private String merchantId;

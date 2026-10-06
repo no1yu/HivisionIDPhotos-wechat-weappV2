@@ -60,10 +60,12 @@ public class AsyncCenter {
         if(photo==null){
             return;
         }
+
         QueryWrapper<WebSet> storageQw = new QueryWrapper<>();
         storageQw.eq("id",1);
         storageQw.select("directory");
         String directory = webSetDao.selectOne(storageQw).getDirectory();
+
         photoDao.deleteById(photoId);
         PicUtil.deleteImage(photo.getNImg(),directory);
         PicUtil.deleteTempDirectory(photoId,directory);

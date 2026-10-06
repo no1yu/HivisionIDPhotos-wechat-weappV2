@@ -23,7 +23,7 @@ public class WebTask {
     private Integer id;
 
     /**
-     * 类型：1未解锁照片清理，2临时编辑数据清理
+     * 类型：1过期照片清理，2临时编辑数据清理
      */
     private Integer type;
 

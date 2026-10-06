@@ -194,36 +194,34 @@ public class AdminServiceImpl implements AdminService {
         AdminIndexVo adminIndexVo = new AdminIndexVo();
 
         // 按应用和照片去重，统计当天的照片制作次数
-        Object makeNum = userRecordService.getBaseMapper().selectObjs(
-                new QueryWrapper<UserRecord>()
-                        .select("COUNT(DISTINCT app_id, photo_id)")
-                        .ge("create_time", startOfDay)
-                        .le("create_time", endOfDay)
-                        .eq("status",1)
-                        .ge("app_id",3)
-        ).get(0);
+        QueryWrapper<UserRecord> makeNumQw = new QueryWrapper<>();
+        makeNumQw.select("COUNT(DISTINCT app_id, photo_id)");
+        makeNumQw.ge("create_time", startOfDay);
+        makeNumQw.le("create_time", endOfDay);
+        makeNumQw.eq("status",1);
+        makeNumQw.ge("app_id",3);
+        Object makeNum = userRecordService.getBaseMapper().selectObjs(makeNumQw).get(0);
         adminIndexVo.setMakeNum(Long.parseLong(makeNum.toString()));
 
         // 按应用和照片去重，统计累计照片制作次数
-        Object makeTotal = userRecordService.getBaseMapper().selectObjs(
-                new QueryWrapper<UserRecord>()
-                        .select("COUNT(DISTINCT app_id, photo_id)")
-                        .ge("app_id",3)
-                        .eq("status",1)
-        ).get(0);
+        QueryWrapper<UserRecord> makeTotalQw = new QueryWrapper<>();
+        makeTotalQw.select("COUNT(DISTINCT app_id, photo_id)");
+        makeTotalQw.ge("app_id",3);
+        makeTotalQw.eq("status",1);
+        Object makeTotal = userRecordService.getBaseMapper().selectObjs(makeTotalQw).get(0);
         adminIndexVo.setMakeTotal(Long.parseLong(makeTotal.toString()));
 
         // 统计当天的用户数量
         QueryWrapper<User> qw2 = new QueryWrapper<>();
-        qw2.ge("create_time", startOfDay)
-                .le("create_time", endOfDay);
+        qw2.ge("create_time", startOfDay);
+        qw2.le("create_time", endOfDay);
         adminIndexVo.setUserNum(userService.count(qw2));
         adminIndexVo.setUserTotal(userService.count());
 
         //统计当天新增的全部订单，不区分订单状态
         QueryWrapper<PayOrder> orderQw = new QueryWrapper<>();
-        orderQw.ge("create_time",startOfDay)
-                .le("create_time",endOfDay);
+        orderQw.ge("create_time",startOfDay);
+        orderQw.le("create_time",endOfDay);
         adminIndexVo.setOrderNum(payOrderService.count(orderQw));
 
         // 生成最近7天的日期列表和数据统计
@@ -238,15 +236,14 @@ public class AdminServiceImpl implements AdminService {
         }
 
         // 查询日期范围内的记录数
-        List<Map<String, Object>> counts = userRecordService.getBaseMapper().selectMaps(
-                new QueryWrapper<UserRecord>()
-                        .select("DATE(create_time) as date", "COUNT(DISTINCT app_id, photo_id) as count")
-                        .ge("create_time", startDate.atStartOfDay())  // 从最近7天的起始日期
-                        .le("create_time", endOfDay)  // 改为当前时间
-                        .eq("status",1)
-                        .ge("app_id",3)
-                        .groupBy("DATE(create_time)")
-        );
+        QueryWrapper<UserRecord> countQw = new QueryWrapper<>();
+        countQw.select("DATE(create_time) as date", "COUNT(DISTINCT app_id, photo_id) as count");
+        countQw.ge("create_time", startDate.atStartOfDay());  // 从最近7天的起始日期
+        countQw.le("create_time", endOfDay);  // 改为当前时间
+        countQw.eq("status",1);
+        countQw.ge("app_id",3);
+        countQw.groupBy("DATE(create_time)");
+        List<Map<String, Object>> counts = userRecordService.getBaseMapper().selectMaps(countQw);
 
         // 将查询结果转换为日期-数量的映射
         Map<String, Integer> countMap = new HashMap<>();
@@ -301,7 +298,8 @@ public class AdminServiceImpl implements AdminService {
         if(!endTime.isEmpty()){
             qw.le("create_time", LocalDateTime.of(LocalDate.parse(endTime), LocalTime.MAX));
         }
-        qw.orderByDesc("create_time").orderByDesc("id");
+        qw.orderByDesc("create_time");
+        qw.orderByDesc("id");
         return customService.page(page, qw);
     }
 
@@ -322,7 +320,8 @@ public class AdminServiceImpl implements AdminService {
             qw.le("create_time",LocalDateTime.of(LocalDate.parse(endTime),LocalTime.MAX));
         }
         qw.isNotNull("n_img");
-        qw.orderByDesc("create_time").orderByDesc("id");
+        qw.orderByDesc("create_time");
+        qw.orderByDesc("id");
         return photoService.page(page, qw);
     }
 
@@ -345,7 +344,8 @@ public class AdminServiceImpl implements AdminService {
         if(!endTime.isEmpty()){
             qw.le("create_time",LocalDateTime.of(LocalDate.parse(endTime),LocalTime.MAX));
         }
-        qw.orderByDesc("create_time").orderByDesc("id");
+        qw.orderByDesc("create_time");
+        qw.orderByDesc("id");
         return userRecordService.page(page, qw);
     }
 
@@ -360,11 +360,13 @@ public class AdminServiceImpl implements AdminService {
         if(first==null){
             first = new WebTask();
             first.setType(1);
-            first.setTaskName("未解锁照片清理");
+            first.setTaskName("过期照片清理");
         }
 
         QueryWrapper<WebTask> secondQw = new QueryWrapper<>();
-        secondQw.eq("type",2).orderByDesc("id").last("limit 1");
+        secondQw.eq("type",2);
+        secondQw.orderByDesc("id");
+        secondQw.last("limit 1");
         WebTask second = webTaskService.getOne(secondQw);
         if(second==null){
             second = new WebTask();
@@ -429,7 +431,8 @@ public class AdminServiceImpl implements AdminService {
         if(!endTime.isEmpty()){
             qw.le("create_time",LocalDateTime.of(LocalDate.parse(endTime),LocalTime.MAX));
         }
-        qw.orderByDesc("create_time").orderByDesc("id");
+        qw.orderByDesc("create_time");
+        qw.orderByDesc("id");
         return userService.page(page, qw);
     }
 
@@ -510,13 +513,16 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public IPage<PayOrder> getPayOrderPage(int pageNum, int pageSize,int userId,String orderNo,String orderWx,int appId,int status,String startTime,String endTime) {
-        return payOrderService.getPayOrderPage(pageNum,pageSize,userId,orderNo,orderWx,appId,status,startTime,endTime);
+    public IPage<PayOrder> getPayOrderPage(int pageNum, int pageSize,int userId,String orderNo,String orderWx,int appId,int type,int status,String startTime,String endTime) {
+        return payOrderService.getPayOrderPage(pageNum,pageSize,userId,orderNo,orderWx,appId,type,status,startTime,endTime);
     }
 
     @Override
     public List<Map<String,Object>> getAppSetOptions() {
-        return appSetService.listMaps(new QueryWrapper<AppSet>().select("id","name").orderByAsc("id"));
+        QueryWrapper<AppSet> qw = new QueryWrapper<>();
+        qw.select("id","name");
+        qw.orderByAsc("id");
+        return appSetService.listMaps(qw);
     }
 
 
@@ -529,7 +535,7 @@ public class AdminServiceImpl implements AdminService {
         paidQw.eq("status",2);
 
         QueryWrapper<PayOrder> refundedQw = new QueryWrapper<>();
-        refundedQw.eq("status",3);
+        refundedQw.eq("status",5);
 
         Map<String,Object> data = new HashMap<>();
         data.put("pendingCount",payOrderService.count(pendingQw));
@@ -544,16 +550,15 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public void deletePayOrder(Integer id) {
-        payOrderService.removeById(id);
+    public String deletePayOrder(Integer id) {
+        return payOrderService.deleteOrder(id);
     }
 
     @Override
     public WebSet getWebSet() {
         QueryWrapper<WebSet> qw = new QueryWrapper<>();
         qw.eq("id",1);
-        qw.select("id","app_id","app_secret","video_unit_id","login_type","pic_domain","directory","official_switch","official_qr_code_image_url","merchant_id","merchant_serial_number",
-                "api_v3_key","merchant_private_key","pay_notify_url");
+        qw.select("id","app_id","app_secret","video_unit_id","login_type","pic_domain","directory","official_switch","official_qr_code_image_url","merchant_id","merchant_serial_number","api_v3_key","merchant_private_key","pay_notify_url","pay_type","virtual_offer_id","virtual_pay_environment","virtual_app_key","virtual_notify_url","virtual_token","virtual_encoding_aes_key");
         return webSetService.getOne(qw);
     }
 
@@ -617,9 +622,11 @@ public class AdminServiceImpl implements AdminService {
         Help help = helpService.getById(id);
         QueryWrapper<Help> qw = new QueryWrapper<>();
         if(direction==1){
-            qw.lt("sort",help.getSort()).orderByDesc("sort");
+            qw.lt("sort",help.getSort());
+            qw.orderByDesc("sort");
         }else{
-            qw.gt("sort",help.getSort()).orderByAsc("sort");
+            qw.gt("sort",help.getSort());
+            qw.orderByAsc("sort");
         }
         qw.last("limit 1");
         Help target = helpService.getOne(qw);
@@ -661,7 +668,8 @@ public class AdminServiceImpl implements AdminService {
         if(!endTime.isEmpty()){
             qw.le("create_time",LocalDateTime.of(LocalDate.parse(endTime),LocalTime.MAX));
         }
-        qw.orderByDesc("create_time").orderByDesc("id");
+        qw.orderByDesc("create_time");
+        qw.orderByDesc("id");
         return feedbackService.page(page,qw);
     }
 
@@ -699,9 +707,7 @@ public class AdminServiceImpl implements AdminService {
     public WebSet getModelSet() {
         QueryWrapper<WebSet> qw = new QueryWrapper<>();
         qw.eq("id",1);
-        qw.select("pic_api_type","pic_api_url","pic_api_key","human_matting_model","face_detect_model","matting_model","colourize_model","cartoon_model",
-                "american_human_matting_model","american_face_detect_model","template_human_matting_model","template_face_detect_model",
-                "couple_human_matting_model","couple_face_detect_model","clothes_face_detect_model","clothes_parsing_model","deblur_model");
+        qw.select("pic_api_type","pic_api_url","pic_api_key","human_matting_model","face_detect_model","matting_model","colourize_model","cartoon_model","american_human_matting_model","american_face_detect_model","template_human_matting_model","template_face_detect_model","couple_human_matting_model","couple_face_detect_model","clothes_face_detect_model","clothes_parsing_model","deblur_model");
         return webSetService.getOne(qw);
     }
 
@@ -716,7 +722,9 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<AppSet> getExploreSet() {
-        return appSetService.list(new QueryWrapper<AppSet>().orderByAsc("sort"));
+        QueryWrapper<AppSet> qw = new QueryWrapper<>();
+        qw.orderByAsc("sort");
+        return appSetService.list(qw);
     }
 
     @Override
@@ -760,16 +768,11 @@ public class AdminServiceImpl implements AdminService {
         if(appSet.getId()==14 && (appSet.getSettingValue()<0.01 || appSet.getSettingValue()>1)){
             return "鉴黄阈值必须填写0.01到1之间的数值";
         }
-        //广告或付费下载启用前，先检查对应的系统配置
-        if(appSet.getStatus()==2 || appSet.getStatus()==3 || appSet.getStatus()==4){
+        //看广告下载和看广告或付费下载保存时检查广告位ID
+        if(appSet.getStatus()==2 || appSet.getStatus()==4){
             WebSet webSet = webSetService.getById(1);
-            if((appSet.getStatus()==2 || appSet.getStatus()==4)
-                    && (webSet.getVideoUnitId()==null || "".equals(webSet.getVideoUnitId()))){
-                return "未配置广告位ID，请先前往系统设置进行配置";
-            }
-            if((appSet.getStatus()==3 || appSet.getStatus()==4)
-                    && (webSet.getMerchantId()==null || "".equals(webSet.getMerchantId()))){
-                return "未配置微信支付，请先前往系统设置进行配置";
+            if(webSet.getVideoUnitId()==null || "".equals(webSet.getVideoUnitId())){
+                return "未配置激励视频广告位ID，请先前往系统设置进行配置";
             }
         }
         AppSet oldAppSet = appSetService.getById(appSet.getId());
@@ -905,12 +908,15 @@ public class AdminServiceImpl implements AdminService {
     public Map<String,Object> getApplicationCount() {
         List<Map<String,Object>> applications = new ArrayList<>();
         long applicationTotal = 0L;
-        List<AppSet> appSets = appSetService.list(new QueryWrapper<AppSet>()
-                .notIn("id",1,2,14,15)
-                .orderByAsc("sort"));
+        QueryWrapper<AppSet> appQw = new QueryWrapper<>();
+        appQw.notIn("id",1,2,14,15);
+        appQw.orderByAsc("sort");
+        List<AppSet> appSets = appSetService.list(appQw);
         for (AppSet appSet : appSets) {
             QueryWrapper<UserRecord> recordQw = new QueryWrapper<>();
-            recordQw.select("COUNT(DISTINCT photo_id)").eq("app_id",appSet.getId()).eq("status",1);
+            recordQw.select("COUNT(DISTINCT photo_id)");
+            recordQw.eq("app_id",appSet.getId());
+            recordQw.eq("status",1);
             Object useCountData = userRecordService.getBaseMapper().selectObjs(recordQw).get(0);
             long useCount = Long.parseLong(useCountData.toString());
             Map<String,Object> application = new HashMap<>();
@@ -922,7 +928,8 @@ public class AdminServiceImpl implements AdminService {
         }
 
         QueryWrapper<UserRecord> uploadQw = new QueryWrapper<>();
-        uploadQw.eq("app_id",1).eq("status",1);
+        uploadQw.eq("app_id",1);
+        uploadQw.eq("status",1);
         long uploadCount = userRecordService.count(uploadQw);
 
         QueryWrapper<PayOrder> pendingOrderQw = new QueryWrapper<>();
@@ -932,7 +939,7 @@ public class AdminServiceImpl implements AdminService {
         paidOrderQw.eq("status",2);
 
         QueryWrapper<PayOrder> refundedOrderQw = new QueryWrapper<>();
-        refundedOrderQw.eq("status",3);
+        refundedOrderQw.eq("status",5);
 
         Map<String,Object> data = new HashMap<>();
         data.put("applications",applications);
@@ -963,7 +970,9 @@ public class AdminServiceImpl implements AdminService {
             throw new IllegalStateException("云平台规格读取失败");
         }
         JSONArray data = response.getJSONArray("data");
-        List<Item> localList = itemService.list(new QueryWrapper<Item>().gt("cloud_item_id",0));
+        QueryWrapper<Item> localQw = new QueryWrapper<>();
+        localQw.gt("cloud_item_id",0);
+        List<Item> localList = itemService.list(localQw);
         Map<Integer,Item> localMap = new HashMap<>();
         for(Item item : localList){
             localMap.put(item.getCloudItemId(),item);
@@ -1007,7 +1016,8 @@ public class AdminServiceImpl implements AdminService {
             throw new IllegalStateException("云平台规格更新失败");
         }
         QueryWrapper<Item> deleteQw = new QueryWrapper<>();
-        deleteQw.gt("cloud_item_id",0).notIn("cloud_item_id",cloudIds);
+        deleteQw.gt("cloud_item_id",0);
+        deleteQw.notIn("cloud_item_id",cloudIds);
         int deleteCount = (int) itemService.count(deleteQw);
         if(deleteCount>0 && !itemService.remove(deleteQw)){
             throw new IllegalStateException("云平台下架规格删除失败");
@@ -1017,7 +1027,9 @@ public class AdminServiceImpl implements AdminService {
         result.put("insertCount",insertList.size());
         result.put("updateCount",updateList.size());
         result.put("deleteCount",deleteCount);
-        result.put("customCount",itemService.count(new QueryWrapper<Item>().eq("cloud_item_id",0)));
+        QueryWrapper<Item> customQw = new QueryWrapper<>();
+        customQw.eq("cloud_item_id",0);
+        result.put("customCount",itemService.count(customQw));
         return result;
     }
 
@@ -1062,7 +1074,8 @@ public class AdminServiceImpl implements AdminService {
         data.put("customCount", customService.count(customQw));
 
         QueryWrapper<Photo> photoQw = new QueryWrapper<>();
-        photoQw.eq("user_id", userId).isNotNull("n_img");
+        photoQw.eq("user_id", userId);
+        photoQw.isNotNull("n_img");
         data.put("photoCount", photoService.count(photoQw));
 
         QueryWrapper<UserRecord> recordQw = new QueryWrapper<>();
@@ -1070,11 +1083,16 @@ public class AdminServiceImpl implements AdminService {
         data.put("recordCount", userRecordService.count(recordQw));
 
         QueryWrapper<UserRecord> recentRecordQw = new QueryWrapper<>();
-        recentRecordQw.eq("user_id", userId).orderByDesc("create_time").orderByDesc("id");
+        recentRecordQw.eq("user_id", userId);
+        recentRecordQw.orderByDesc("create_time");
+        recentRecordQw.orderByDesc("id");
         data.put("recentRecords", userRecordService.page(new Page<>(1, 10), recentRecordQw).getRecords());
 
         QueryWrapper<Photo> recentPhotoQw = new QueryWrapper<>();
-        recentPhotoQw.eq("user_id", userId).isNotNull("n_img").orderByDesc("create_time").orderByDesc("id");
+        recentPhotoQw.eq("user_id", userId);
+        recentPhotoQw.isNotNull("n_img");
+        recentPhotoQw.orderByDesc("create_time");
+        recentPhotoQw.orderByDesc("id");
         data.put("recentPhotos", photoService.page(new Page<>(1, 10), recentPhotoQw).getRecords());
         return data;
     }

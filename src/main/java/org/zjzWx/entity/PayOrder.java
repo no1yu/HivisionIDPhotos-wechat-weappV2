@@ -1,6 +1,8 @@
 package org.zjzWx.entity;
 
+import com.baomidou.mybatisplus.annotation.FieldStrategy;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -18,7 +20,7 @@ import java.util.Date;
 public class PayOrder {
 
     /**
-     * 微信支付订单表
+     * 支付订单表
      */
     @TableId(type = IdType.AUTO)
     private Integer id;
@@ -59,7 +61,12 @@ public class PayOrder {
     private BigDecimal money;
 
     /**
-     * 订单状态：1待支付，2支付成功，3退款成功
+     * 支付方式：1微信支付，2虚拟支付
+     */
+    private Integer type;
+
+    /**
+     * 订单状态：1待支付，2支付成功，3退款中，4退款失败，5退款成功
      */
     private Integer status;
 
@@ -71,7 +78,14 @@ public class PayOrder {
     /**
      * 微信退款单号
      */
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     private String refundWx;
+
+    /**
+     * 退款失败原因
+     */
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
+    private String refundMsg;
 
     /**
      * 订单创建时间
@@ -88,6 +102,7 @@ public class PayOrder {
     /**
      * 退款成功时间
      */
+    @TableField(updateStrategy = FieldStrategy.ALWAYS)
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     private Date refundTime;
 }

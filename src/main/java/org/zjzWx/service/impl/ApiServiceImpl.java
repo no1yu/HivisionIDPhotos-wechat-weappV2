@@ -391,7 +391,7 @@ public class ApiServiceImpl implements ApiService {
             storageQw.select("pic_domain","directory");
             WebSet storageSet = webSetService.getOne(storageQw);
 
-            //高清下载权已经永久解锁时，普通预览只返回当前低清临时图，不覆盖作品里的高清成片
+            //高清下载权已经解锁时，普通预览只返回当前低清临时图，不覆盖作品里的高清成片
             if(photo.getDownloadStatus()==3){
                 picVo.setPhotoId(photoId);
                 picVo.setPicUrl(PicUtil.getPublicUrl(photo.getResultPath(),storageSet.getPicDomain()));
