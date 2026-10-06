@@ -26,7 +26,7 @@
 # ⭐最近更新
     版本更新教程：https://www.bilibili.com/video/BV1GRpw69Evj/
 
-- 2026.10.06：增加虚拟支付，调整下载和订单逻辑，此版本需要额外执行sql：https://0po.cn/update/20261006-update-sql.html
+- 2026.10.06：增加虚拟支付，调整下载和订单逻辑，从旧版本升级时，需要额外执行 SQL：https://0po.cn/update/20261006-update-sql.html
 - 2026.09.01：V2版本正式发布
 
 <hr>
