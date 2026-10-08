@@ -25,7 +25,7 @@
 
 
 # ⭐最近更新
-    版本更新教程：https://www.bilibili.com/video/BV1GRpw69Evj/
+    版本更新教程：https://www.bilibili.com/video/BV1GRpw69Evj
 
 - 2026.10.06：增加虚拟支付，调整下载和订单逻辑，从旧版本升级时，需要额外执行 SQL：https://0po.cn/update/20261006-update-sql.html
 - 2026.09.01：V2版本正式发布
@@ -38,9 +38,9 @@
 
 本项目的所有功能都是基于HivisionIDPhotos Pro进行对接开发，您部署HivisionIDPhotos Pro后即可完成私有化部署API
 
-1.视频部署教程：https://www.bilibili.com/video/BV1oGtz6yEQM/
+1.视频部署教程：https://www.bilibili.com/video/BV1oGtz6yEQM
 
-2.如果您不想部署，可以使用映象引擎云平台：https://cloud.0po.cn/
+2.如果您不想部署，可以使用映象引擎云平台：https://cloud.0po.cn
 
 
 <hr>
@@ -96,7 +96,7 @@
 
 # 🔧部署
 
-视频教程：https://www.bilibili.com/video/BV1FFtv6MEWt/ （建议都先看一遍）
+视频教程：https://www.bilibili.com/video/BV1FFtv6MEWt （建议都先看一遍）
 <p></p>
 环境工作准备：
 
